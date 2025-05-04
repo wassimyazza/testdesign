@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Requests - Admin Dashboard - Stay & Travel</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Navbar styles */
+        [x-cloak] { display: none !important; }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .btn-primary {
+            background-color: #d62828;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Sidebar styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link active">Admin</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">Admin User</span>
+                                <img src="https://ui-avatars.com/api/?name=Admin+User&color=7F9CF5&background=EBF4FF" alt="Profile" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Admin</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <button class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row">
+                <!-- Sidebar -->
+                <div class="w-full md:w-1/4 mb-8 md:mb-0 md:pr-6">
+                    <div class="w-full md:w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                            <h2 class="text-lg font-serif font-bold relative z-10">
+                                Admin Dashboard
+                            </h2>
+                            <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                <div class="pattern-dots-md text-white">
+                                    <!-- Pattern background -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="py-2">
+                            <!-- Admin Sidebar -->
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-users"></i> Users
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-home"></i> Pending Properties
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-star"></i> Pending Reviews
+                            </a>
+                            <a href="#" class="sidebar-link active">
+                                <i class="fas fa-money-bill-wave"></i> Withdrawals
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-envelope"></i> Messages
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-receipt"></i> Transactions
+                            </a>
+                            <form class="sidebar-link-container">
+                                <button type="submit" class="sidebar-link-button">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full md:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900">Withdrawal Requests</h1>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="px-6 py-4 bg-blue-50 border-b border-blue-100">
+                            <div class="flex justify-between items-center">
+                                <h2 class="font-semibold text-blue-800">Host Withdrawal Requests</h2>
+                                <div>
+                                    <button id="all-tab" class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md">All</button>
+                                    <button id="pending-tab" class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-md ml-2">Pending</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Host
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date Requested
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Bank Info
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr class="withdrawal-row" data-status="pending">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">Sarah Johnson</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Jun 12, 2025</div>
+                                            <div class="text-xs text-gray-500">02:30 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">3,200.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-900 view-bank-info" data-bank-info="Bank: Banque Populaire
+Account Number: 123456789012
+Account Holder: Sarah Johnson
+RIB: 001810000012345678901234">
+                                                View Details
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Pending
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div class="flex space-x-2">
+                                                <form method="POST" action="#">
+                                                    <button type="submit" class="text-green-600 hover:text-green-900">
+                                                        Approve
+                                                    </button>
+                                                </form>
+                                                
+                                                <form method="POST" action="#">
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                                        Reject
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="withdrawal-row" data-status="approved">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">Ahmed El Mansouri</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Jun 10, 2025</div>
+                                            <div class="text-xs text-gray-500">11:15 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">5,000.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-900 view-bank-info" data-bank-info="Bank: Attijariwafa Bank
+Account Number: 987654321098
+Account Holder: Ahmed El Mansouri
+RIB: 007810000098765432109876">
+                                                View Details
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Approved
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <span class="text-gray-400">No actions</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="withdrawal-row" data-status="rejected">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">Hassan Alami</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Jun 08, 2025</div>
+                                            <div class="text-xs text-gray-500">09:45 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">1,500.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-900 view-bank-info" data-bank-info="Bank: CIH Bank
+Account Number: 567890123456
+Account Holder: Hassan Alami
+RIB: 022570000056789012345678">
+                                                View Details
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Rejected
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <span class="text-gray-400">No actions</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bank Info Modal -->
+    <div id="bankInfoModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Bank Information</h3>
+                <button type="button" onclick="closeBankInfoModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-md">
+                <pre id="bankInfoContent" class="whitespace-pre-wrap text-sm text-gray-700"></pre>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button type="button" onclick="closeBankInfoModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">© 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Bank info modal functionality
+        const viewBankInfoButtons = document.querySelectorAll('.view-bank-info');
+        const bankInfoModal = document.getElementById('bankInfoModal');
+        const bankInfoContent = document.getElementById('bankInfoContent');
+        
+        viewBankInfoButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const bankInfo = this.getAttribute('data-bank-info');
+                bankInfoContent.textContent = bankInfo;
+                bankInfoModal.classList.remove('hidden');
+            });
+        });
+        
+        function closeBankInfoModal() {
+            bankInfoModal.classList.add('hidden');
+        }
+        
+        // Close modal when clicking outside
+        bankInfoModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBankInfoModal();
+            }
+        });
+        
+        // Tab functionality
+        const allTab = document.getElementById('all-tab');
+        const pendingTab = document.getElementById('pending-tab');
+        const withdrawalRows = document.querySelectorAll('.withdrawal-row');
+        
+        allTab.addEventListener('click', function() {
+            allTab.classList.remove('bg-gray-200', 'text-gray-700');
+            allTab.classList.add('bg-blue-600', 'text-white');
+            pendingTab.classList.remove('bg-blue-600', 'text-white');
+            pendingTab.classList.add('bg-gray-200', 'text-gray-700');
+            
+            withdrawalRows.forEach(row => {
+                row.classList.remove('hidden');
+            });
+        });
+        
+        pendingTab.addEventListener('click', function() {
+            pendingTab.classList.remove('bg-gray-200', 'text-gray-700');
+            pendingTab.classList.add('bg-blue-600', 'text-white');
+            allTab.classList.remove('bg-blue-600', 'text-white');
+            allTab.classList.add('bg-gray-200', 'text-gray-700');
+            
+            withdrawalRows.forEach(row => {
+                if (row.dataset.status === 'pending') {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+</body>
+</html>

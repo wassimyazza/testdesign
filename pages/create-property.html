@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Your Property - Stay & Travel</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Navbar styles */
+        [x-cloak] { display: none !important; }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .btn-primary {
+            background-color: #d62828;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Sidebar styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link">My Properties</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">John Host</span>
+                                <img src="https://ui-avatars.com/api/?name=John+Host&color=7F9CF5&background=EBF4FF" alt="Profile" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <button class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Sidebar -->
+                <div class="w-full md:w-1/4">
+                    <div class="w-full md:w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                            <h2 class="text-lg font-serif font-bold relative z-10">
+                                Host Dashboard
+                            </h2>
+                            <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                <div class="pattern-dots-md text-white">
+                                    <!-- Pattern background -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="py-2">
+                            <!-- Host Sidebar -->
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-home"></i> My Properties
+                            </a>
+                            <a href="#" class="sidebar-link active">
+                                <i class="fas fa-plus-circle"></i> Add Property
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-calendar-check"></i> Reservations
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-wallet"></i> Earnings
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-envelope"></i> Messages
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-receipt"></i> Transactions
+                            </a>
+                            <form class="sidebar-link-container">
+                                <button type="submit" class="sidebar-link-button">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full md:w-3/4">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-bold text-gray-900">List Your Property</h1>
+                            <a href="#" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-arrow-left mr-1"></i> Back to My Properties
+                            </a>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-6 bg-blue-600 text-white">
+                                <h2 class="text-xl font-semibold">Property Details</h2>
+                                <p class="mt-1 text-sm text-blue-100">Fill in the details below to list your property. Fields marked with * are required.</p>
+                            </div>
+                            
+                            <form method="POST" action="#" enctype="multipart/form-data" class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Property Title *</label>
+                                        <input type="text" name="title" id="title" required maxlength="255"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Property Type *</label>
+                                        <select name="type" id="type" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">Select property type</option>
+                                            <option value="apartment">Apartment</option>
+                                            <option value="house">House</option>
+                                            <option value="villa">Villa</option>
+                                            <option value="riad">Riad</option>
+                                            <option value="room">Room</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                                    <textarea name="description" id="description" rows="5" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Describe your property, amenities, and nearby attractions.</p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                                        <input type="text" name="city" id="city" required maxlength="100"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+                                        <input type="text" name="address" id="address" required maxlength="255"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                    <div>
+                                        <label for="price_per_night" class="block text-sm font-medium text-gray-700 mb-1">Price per Night (MAD) *</label>
+                                        <input type="number" name="price_per_night" id="price_per_night" required min="0" step="0.01"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="capacity" class="block text-sm font-medium text-gray-700 mb-1">Guest Capacity *</label>
+                                        <input type="number" name="capacity" id="capacity" value="1" required min="1"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="is_available" class="block text-sm font-medium text-gray-700 mb-1">Availability</label>
+                                        <div class="flex items-center mt-2">
+                                            <input type="checkbox" name="is_available" id="is_available" value="1" checked
+                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                            <label for="is_available" class="ml-2 block text-sm text-gray-700">
+                                                Available for booking
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div>
+                                        <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-1">Bedrooms *</label>
+                                        <input type="number" name="bedrooms" id="bedrooms" value="1" required min="0"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="bathrooms" class="block text-sm font-medium text-gray-700 mb-1">Bathrooms *</label>
+                                        <input type="number" name="bathrooms" id="bathrooms" value="1" required min="0"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-8">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Property Images</label>
+                                    <div class="flex items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                        <div class="space-y-1 text-center">
+                                            <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-3"></i>
+                                            <div class="flex text-sm text-gray-600">
+                                                <label for="images" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                                    <span>Upload images</span>
+                                                    <input id="images" name="images[]" type="file" class="sr-only" multiple accept="image/jpeg,image/png,image/jpg">
+                                                </label>
+                                                <p class="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500">
+                                                PNG, JPG, JPEG up to 2MB. First image will be the main image.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="image-preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                                </div>
+                                
+                                <div class="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 mb-8">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm">
+                                                Your property listing will be reviewed by our team before it becomes visible to travelers.
+                                                This process usually takes 24-48 hours.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3">
+                                    <a href="#" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition">
+                                        Create Listing
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">© 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Image preview functionality
+        document.getElementById('images').addEventListener('change', function(event) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            
+            const files = event.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (!file.type.match('image.*')) {
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'h-32 w-full object-cover rounded';
+                    
+                    const label = document.createElement('div');
+                    label.className = 'absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center';
+                    label.textContent = i === 0 ? 'Main Image' : `Image ${i + 1}`;
+                    
+                    div.appendChild(img);
+                    div.appendChild(label);
+                    preview.appendChild(div);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+</body>
+</html>

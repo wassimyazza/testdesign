@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Properties - Admin Dashboard - Stay & Travel</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Navbar styles */
+        [x-cloak] { display: none !important; }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .btn-primary {
+            background-color: #d62828;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Sidebar styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link active">Admin</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">Admin User</span>
+                                <img src="https://ui-avatars.com/api/?name=Admin+User&color=7F9CF5&background=EBF4FF" alt="Profile" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Admin</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <button class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row">
+                <!-- Sidebar -->
+                <div class="w-full md:w-1/4 mb-8 md:mb-0 md:pr-6">
+                    <div class="w-full md:w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                            <h2 class="text-lg font-serif font-bold relative z-10">
+                                Admin Dashboard
+                            </h2>
+                            <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                <div class="pattern-dots-md text-white">
+                                    <!-- Pattern background -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="py-2">
+                            <!-- Admin Sidebar -->
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-users"></i> Users
+                            </a>
+                            <a href="#" class="sidebar-link active">
+                                <i class="fas fa-home"></i> Pending Properties
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-star"></i> Pending Reviews
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-money-bill-wave"></i> Withdrawals
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-envelope"></i> Messages
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-receipt"></i> Transactions
+                            </a>
+                            <form class="sidebar-link-container">
+                                <button type="submit" class="sidebar-link-button">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full md:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900">Pending Properties</h1>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="px-6 py-4 bg-blue-50 border-b border-blue-100">
+                            <div class="flex justify-between items-center">
+                                <h2 class="font-semibold text-blue-800">Properties Awaiting Approval</h2>
+                                <div class="text-sm text-blue-600">
+                                    3 properties pending
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="divide-y divide-gray-200">
+                            <!-- Property 1 -->
+                            <div class="p-6">
+                                <div class="md:flex">
+                                    <div class="md:w-1/4 mb-4 md:mb-0 md:pr-6">
+                                        <div class="h-48 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-home text-5xl text-blue-300"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="md:w-3/4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-lg font-semibold text-gray-900">Beautiful Riad in Marrakech</h3>
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                                Pending
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-gray-600 mb-2">Marrakech, 45 Derb Moulay Abdella, Medina</p>
+                                        
+                                        <div class="flex items-center mb-4">
+                                            <i class="fas fa-user text-gray-400 mr-1"></i>
+                                            <span class="text-sm text-gray-500">Host: Sarah Johnson</span>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Property Details:</h4>
+                                            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                                                <div>
+                                                    <i class="fas fa-home text-blue-500 mr-1"></i> Riad
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user-friends text-blue-500 mr-1"></i> 8 guests
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bed text-blue-500 mr-1"></i> 4 bedrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bath text-blue-500 mr-1"></i> 3 bathrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas text-blue-500 mr-1">MAD</i> 1,200.00 MAD/night
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Description:</h4>
+                                            <p class="text-sm text-gray-600">Experience authentic Moroccan hospitality in this stunning riad located in the heart of Marrakech's medina. Our traditional house offers 4 beautifully decorated rooms with modern amenities and a peaceful rooftop terrace overlooking the medina...</p>
+                                        </div>
+                                        
+                                        <div class="flex space-x-3">
+                                            <form method="POST" action="#">
+                                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-md transition">
+                                                    <i class="fas fa-check mr-1"></i> Approve Property
+                                                </button>
+                                            </form>
+                                            
+                                            <a href="#" class="bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-medium py-2 px-4 rounded-md transition">
+                                                <i class="fas fa-eye mr-1"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Property 2 -->
+                            <div class="p-6">
+                                <div class="md:flex">
+                                    <div class="md:w-1/4 mb-4 md:mb-0 md:pr-6">
+                                        <div class="h-48 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-home text-5xl text-blue-300"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="md:w-3/4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-lg font-semibold text-gray-900">Luxury Villa in Essaouira</h3>
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                                Pending
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-gray-600 mb-2">Essaouira, 23 Rue Sidi Mohammed Ben Abdellah</p>
+                                        
+                                        <div class="flex items-center mb-4">
+                                            <i class="fas fa-user text-gray-400 mr-1"></i>
+                                            <span class="text-sm text-gray-500">Host: Ahmed El Mansouri</span>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Property Details:</h4>
+                                            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                                                <div>
+                                                    <i class="fas fa-home text-blue-500 mr-1"></i> Villa
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user-friends text-blue-500 mr-1"></i> 12 guests
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bed text-blue-500 mr-1"></i> 6 bedrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bath text-blue-500 mr-1"></i> 5 bathrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas text-blue-500 mr-1">MAD</i> 2,500.00 MAD/night
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Description:</h4>
+                                            <p class="text-sm text-gray-600">Stunning ocean-front villa in Essaouira with private beach access, infinity pool, and panoramic views of the Atlantic Ocean. This modern villa combines Moroccan architecture with contemporary luxury, perfect for families or groups...</p>
+                                        </div>
+                                        
+                                        <div class="flex space-x-3">
+                                            <form method="POST" action="#">
+                                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-md transition">
+                                                    <i class="fas fa-check mr-1"></i> Approve Property
+                                                </button>
+                                            </form>
+                                            
+                                            <a href="#" class="bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-medium py-2 px-4 rounded-md transition">
+                                                <i class="fas fa-eye mr-1"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Property 3 -->
+                            <div class="p-6">
+                                <div class="md:flex">
+                                    <div class="md:w-1/4 mb-4 md:mb-0 md:pr-6">
+                                        <div class="h-48 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-home text-5xl text-blue-300"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="md:w-3/4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-lg font-semibold text-gray-900">Modern Apartment in Rabat</h3>
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                                Pending
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-gray-600 mb-2">Rabat, 19 Avenue Hassan II, Agdal</p>
+                                        
+                                        <div class="flex items-center mb-4">
+                                            <i class="fas fa-user text-gray-400 mr-1"></i>
+                                            <span class="text-sm text-gray-500">Host: Fatima Zahra</span>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Property Details:</h4>
+                                            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                                                <div>
+                                                    <i class="fas fa-home text-blue-500 mr-1"></i> Apartment
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user-friends text-blue-500 mr-1"></i> 4 guests
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bed text-blue-500 mr-1"></i> 2 bedrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-bath text-blue-500 mr-1"></i> 1 bathrooms
+                                                </div>
+                                                <div>
+                                                    <i class="fas text-blue-500 mr-1">MAD</i> 800.00 MAD/night
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">Description:</h4>
+                                            <p class="text-sm text-gray-600">Contemporary apartment in Rabat's prestigious Agdal district. Features modern furnishings, high-speed internet, and a spacious balcony overlooking the city. Walking distance to restaurants, shops, and cultural attractions...</p>
+                                        </div>
+                                        
+                                        <div class="flex space-x-3">
+                                            <form method="POST" action="#">
+                                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-md transition">
+                                                    <i class="fas fa-check mr-1"></i> Approve Property
+                                                </button>
+                                            </form>
+                                            
+                                            <a href="#" class="bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-medium py-2 px-4 rounded-md transition">
+                                                <i class="fas fa-eye mr-1"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">© 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+</body>
+</html>
