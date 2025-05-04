@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Stay & Travel Morocco</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Primary Colors */
+            --primary-900: #0f3460;
+            --primary-800: #16498c;
+            --primary-700: #1e5daa;
+            --primary-600: #2571c8;
+            --primary-500: #3084e3;
+            --primary-400: #5a9fe8;
+            --primary-300: #84b9ee;
+            --primary-200: #aed3f4;
+            --primary-100: #d9ecfa;
+            --primary-50: #eef7ff;
+            
+            /* Accent Colors */
+            --accent-900: #8c2a0d;
+            --accent-800: #b33410;
+            --accent-700: #d03f12;
+            --accent-600: #e84914;
+            --accent-500: #f65d17;
+            --accent-400: #ff7e42;
+            --accent-300: #ff9a69;
+            --accent-200: #ffb690;
+            --accent-100: #ffd2b8;
+            --accent-50: #fff0e8;
+            
+            /* Neutrals */
+            --neutral-900: #111827;
+            --neutral-800: #1f2937;
+            --neutral-700: #374151;
+            --neutral-600: #4b5563;
+            --neutral-500: #6b7280;
+            --neutral-400: #9ca3af;
+            --neutral-300: #d1d5db;
+            --neutral-200: #e5e7eb;
+            --neutral-100: #f3f4f6;
+            --neutral-50: #f9fafb;
+            
+            /* Functional Colors */
+            --success-500: #10b981;
+            --success-100: #d1fae5;
+            --warning-500: #f59e0b;
+            --warning-100: #fef3c7;
+            --error-500: #ef4444;
+            --error-100: #fee2e2;
+            --info-500: #3b82f6;
+            --info-100: #dbeafe;
+            
+            /* Fonts */
+            --font-primary: 'Poppins', sans-serif;
+            --font-display: 'Playfair Display', serif;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+        }
+        
+        h1, h2, h3 {
+            font-family: var(--font-display);
+        }
+        
+        /* Navbar styles */
+        [x-cloak] { display: none !important; }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .btn-primary {
+            background-color: #d62828;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Messages specific styles */
+        .page-container {
+            background-color: var(--neutral-50);
+            min-height: calc(100vh - 64px);
+        }
+        
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--neutral-800);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 40px;
+            background: linear-gradient(to right, var(--primary-500), var(--accent-500));
+        }
+        
+        .messages-container {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .messages-header {
+            background-color: var(--primary-50);
+            border-bottom: 1px solid var(--primary-100);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .messages-header-content h2 {
+            color: var(--primary-700);
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .messages-count {
+            color: var(--primary-500);
+            font-size: 0.875rem;
+        }
+        
+        .unread-badge {
+            background-color: var(--error-500);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .conversation-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .conversation-item {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--neutral-200);
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .conversation-item:hover {
+            background-color: var(--neutral-50);
+        }
+        
+        .conversation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .avatar-container {
+            position: relative;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-500);
+        }
+        
+        .unread-indicator {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--error-500);
+            color: white;
+            border-radius: 50%;
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 2px solid white;
+        }
+        
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--neutral-800);
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+        }
+        
+        .message-preview {
+            color: var(--neutral-600);
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .from-me {
+            color: var(--neutral-500);
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--primary-200);
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--neutral-700);
+            margin-bottom: 0.75rem;
+        }
+        
+        .empty-description {
+            color: var(--neutral-500);
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .empty-action {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-500);
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .empty-action:hover {
+            background-color: var(--primary-600);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .empty-action i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Sidebar styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .messages-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .unread-badge {
+                margin-top: 0.5rem;
+            }
+            
+            .conversation-item {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link">My Trips</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">John Doe</span>
+                                <img src="https://ui-avatars.com/api/?name=John+Doe&color=7F9CF5&background=EBF4FF" alt="Profile" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Trips</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <button class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="page-container py-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- New Sidebar -->
+                    <div class="w-full md:w-64 bg-white shadow-md rounded-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                            <h2 class="text-lg font-serif font-bold relative z-10">
+                                Messages
+                            </h2>
+                            <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                <div class="pattern-dots-md text-white">
+                                    <!-- Pattern background -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="py-2">
+                            <!-- Traveler Sidebar -->
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-suitcase"></i> My Trips
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="sidebar-link active">
+                                <i class="fas fa-envelope"></i> Messages
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-receipt"></i> Transactions
+                            </a>
+                            <form class="sidebar-link-container">
+                                <button type="submit" class="sidebar-link-button">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Content -->
+                    <div class="w-full md:w-3/4">
+                        <div class="page-header">
+                            <h1 class="page-title">My Messages</h1>
+                        </div>
+                        
+                        <div class="messages-container">
+                            <!-- With messages example -->
+                            <div class="messages-header">
+                                <div class="messages-header-content">
+                                    <h2>Your Conversations</h2>
+                                    <p class="messages-count">3 conversation(s)</p>
+                                </div>
+                                <div class="unread-badge">
+                                    <i class="fas fa-bell mr-1"></i> 2 unread
+                                </div>
+                            </div>
+                            
+                            <div class="conversation-list">
+                                <a href="#" class="conversation-item block">
+                                    <div class="avatar-container">
+                                        <div class="avatar">
+                                            <div class="avatar-placeholder">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <span class="unread-indicator">
+                                            2
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="user-name">Sarah Johnson</span>
+                                            <span class="message-time">2 hours ago</span>
+                                        </div>
+                                        
+                                        <p class="message-preview">
+                                            I'd like to book your property for next week...
+                                        </p>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" class="conversation-item block">
+                                    <div class="avatar-container">
+                                        <div class="avatar">
+                                            <div class="avatar-placeholder">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="user-name">Ahmed El Fassi</span>
+                                            <span class="message-time">1 day ago</span>
+                                        </div>
+                                        
+                                        <p class="message-preview">
+                                            <span class="from-me">You:</span>
+                                            Thank you for the confirmation...
+                                        </p>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" class="conversation-item block">
+                                    <div class="avatar-container">
+                                        <div class="avatar">
+                                            <div class="avatar-placeholder">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <span class="user-name">Marina Costa</span>
+                                            <span class="message-time">3 days ago</span>
+                                        </div>
+                                        
+                                        <p class="message-preview">
+                                            The property was amazing! Thank you...
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">© 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-red-600">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+</body>
+</html>
