@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Reservation - Stay & Travel Morocco</title>
+    <meta name="description" content="Find and book unique accommodations across Morocco - from traditional riads to modern apartments and coastal villas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .moroccan-pattern-subtle {
+            background-color: #f9f7f3;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d62828' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .btn-primary {
+            background-color: #d62828;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .footer-link {
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: #d62828;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .social-icon:hover {
+            background-color: #d62828;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        
+        .flatpickr-day.booked {
+            background-color: #f7fafc;
+            color: #cbd5e0;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link active">Properties</a>
+                        <a href="#" class="navbar-link">My Trips</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">John Doe</span>
+                                <img src="https://ui-avatars.com/api/?name=John+Doe&color=7F9CF5&background=EBF4FF" alt="John Doe" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <form method="POST" action="#">
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Trips</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <form method="POST" action="#" class="block">
+                        <button type="submit" class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="flex-grow">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-5xl mx-auto">
+                <!-- Breadcrumbs -->
+                <div class="mb-6 text-sm">
+                    <a href="#" class="text-blue-600 hover:text-blue-800">Properties</a>
+                    <span class="text-gray-500 mx-2">/</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-800">Luxury Riad in the Medina</a>
+                    <span class="text-gray-500 mx-2">/</span>
+                    <span class="text-gray-700">Make a Reservation</span>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Reservation Form -->
+                    <div class="w-full lg:w-2/3">
+                        <h1 class="text-2xl font-bold text-gray-900 mb-6">Make a Reservation</h1>
+                        
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-6 bg-blue-50 border-b border-blue-100">
+                                <h2 class="text-lg font-semibold text-blue-800">Luxury Riad in the Medina</h2>
+                                <p class="text-blue-600">Medina, Marrakech</p>
+                            </div>
+                            
+                            <form method="POST" action="#" class="p-6">
+                                <input type="hidden" name="property_id" value="1">
+                                
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Your Dates</label>
+                                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-md">
+                                        <div id="reservation-calendar" class="mb-4"></div>
+                                        <!-- Hidden inputs that will be populated by the date picker -->
+                                        <input type="hidden" name="check_in_date" id="check_in_date" required>
+                                        <input type="hidden" name="check_out_date" id="check_out_date" required>
+                                        
+                                        <div class="mt-2 flex items-center text-sm">
+                                            <div class="flex items-center mr-4">
+                                                <div class="w-4 h-4 bg-green-100 border border-green-300 rounded-sm mr-1"></div>
+                                                <span>Available</span>
+                                            </div>
+                                            <div class="flex items-center mr-4">
+                                                <div class="w-4 h-4 bg-gray-200 border border-gray-300 rounded-sm mr-1"></div>
+                                                <span>Unavailable</span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <div class="w-4 h-4 bg-blue-500 border border-blue-600 rounded-sm mr-1"></div>
+                                                <span>Selected</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex mt-3 text-sm">
+                                        <div class="w-1/2 pr-2">
+                                            <label class="block text-gray-700">Check-in</label>
+                                            <div id="display-check-in" class="font-medium">-</div>
+                                        </div>
+                                        <div class="w-1/2 pl-2">
+                                            <label class="block text-gray-700">Check-out</label>
+                                            <div id="display-check-out" class="font-medium">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="guests_count" class="block text-sm font-medium text-gray-700 mb-1">Number of Guests *</label>
+                                    <select name="guests_count" id="guests_count" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="1">1 guest</option>
+                                        <option value="2">2 guests</option>
+                                        <option value="3">3 guests</option>
+                                        <option value="4">4 guests</option>
+                                        <option value="5">5 guests</option>
+                                        <option value="6">6 guests</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm">
+                                                By proceeding with this reservation, you agree to the host's house rules and the refund policy.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end">
+                                    <a href="#" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-md mr-2 transition">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" id="reservation-submit" disabled class="bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition">
+                                        Continue to Review
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Property Summary -->
+                    <div class="w-full lg:w-1/3">
+                        <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-4">Reservation Summary</h2>
+                            
+                            <div class="flex mb-4">
+                                <div class="w-1/3 bg-blue-100 rounded-lg overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1514222134-b57cbb8ce073?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Luxury Riad" class="w-full h-full object-cover">
+                                </div>
+                                <div class="w-2/3 pl-4">
+                                    <h3 class="font-medium text-gray-900">Luxury Riad in the Medina</h3>
+                                    <p class="text-sm text-gray-600">Marrakech</p>
+                                    <div class="flex items-center mt-1 text-sm">
+                                        <span class="flex items-center text-yellow-500">
+                                            <i class="fas fa-star"></i>
+                                            <span class="ml-1 text-gray-700">4.7</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-200 py-4">
+                                <div class="flex justify-between mb-1">
+                                    <div>
+                                        <span id="price-per-night">1,200 MAD</span> x <span id="num-nights">0</span> nights
+                                    </div>
+                                    <div id="subtotal">0 MAD</div>
+                                </div>
+                                <div class="flex justify-between mb-1">
+                                    <div>Cleaning fee</div>
+                                    <div id="cleaning-fee">0 MAD</div>
+                                </div>
+                                <div class="flex justify-between mb-1">
+                                    <div>Service fee</div>
+                                    <div id="service-fee">0 MAD</div>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-200 pt-4">
+                                <div class="flex justify-between font-bold">
+                                    <div>Total</div>
+                                    <div id="total-price">0 MAD</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Stay & Travel Morocco</h3>
+                    <p class="text-gray-600 mb-4">Discover authentic Moroccan hospitality and find your perfect stay across the kingdom.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">All Properties</a></li>
+                        <li><a href="#" class="footer-link">Marrakech</a></li>
+                        <li><a href="#" class="footer-link">Casablanca</a></li>
+                        <li><a href="#" class="footer-link">Fes</a></li>
+                        <li><a href="#" class="footer-link">Chefchaouen</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Host</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Become a Host</a></li>
+                        <li><a href="#" class="footer-link">Responsible Hosting</a></li>
+                        <li><a href="#" class="footer-link">Host Resources</a></li>
+                        <li><a href="#" class="footer-link">Community Forum</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Safety Information</a></li>
+                        <li><a href="#" class="footer-link">Cancellation Options</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">&copy; 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get property price
+            var pricePerNight = 1200;
+            
+            // Get booked dates (example dates)
+            var bookedDates = ["2025-05-10", "2025-05-11", "2025-05-12"];
+            
+            // Initialize calendar
+            var calendar = flatpickr("#reservation-calendar", {
+                mode: "range",
+                minDate: "today",
+                inline: true,
+                disable: bookedDates,
+                dateFormat: "Y-m-d",
+                onChange: function(selectedDates) {
+                    // Only update if we have both dates
+                    if (selectedDates.length === 2) {
+                        var checkIn = selectedDates[0];
+                        var checkOut = selectedDates[1];
+                        
+                        // Update hidden inputs for form submission
+                        document.getElementById('check_in_date').value = formatDate(checkIn);
+                        document.getElementById('check_out_date').value = formatDate(checkOut);
+                        
+                        // Show selected dates to user
+                        document.getElementById('display-check-in').textContent = formatDisplayDate(checkIn);
+                        document.getElementById('display-check-out').textContent = formatDisplayDate(checkOut);
+                        
+                        // Calculate nights
+                        var nights = calculateNights(checkIn, checkOut);
+                        
+                        // Update pricing
+                        updatePricing(nights);
+                        
+                        // Enable the submit button
+                        var submitButton = document.getElementById('reservation-submit');
+                        submitButton.disabled = false;
+                        submitButton.classList.remove('bg-gray-400');
+                        submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    }
+                }
+            });
+            
+            // Helper function to format date for hidden input
+            function formatDate(date) {
+                var d = new Date(date);
+                var month = '' + (d.getMonth() + 1);
+                var day = '' + d.getDate();
+                var year = d.getFullYear();
+                
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+                
+                return [year, month, day].join('-');
+            }
+            
+            // Helper function to format date for display
+            function formatDisplayDate(date) {
+                var options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            }
+            
+            // Calculate nights between two dates
+            function calculateNights(checkIn, checkOut) {
+                var timeDiff = checkOut.getTime() - checkIn.getTime();
+                return Math.ceil(timeDiff / (1000 * 3600 * 24));
+            }
+            
+            // Update pricing calculations
+            function updatePricing(nights) {
+                // Update nights display
+                document.getElementById('num-nights').textContent = nights;
+                
+                // Calculate subtotal
+                var subtotal = pricePerNight * nights;
+                document.getElementById('subtotal').textContent = formatPrice(subtotal);
+                
+                // Calculate cleaning fee (10% of price per night)
+                var cleaningFee = pricePerNight * 0.1;
+                document.getElementById('cleaning-fee').textContent = formatPrice(cleaningFee);
+                
+                // Calculate service fee (15% of price per night)
+                var serviceFee = pricePerNight * 0.15;
+                document.getElementById('service-fee').textContent = formatPrice(serviceFee);
+                
+                // Calculate total
+                var total = subtotal + cleaningFee + serviceFee;
+                document.getElementById('total-price').textContent = formatPrice(total);
+            }
+            
+            // Format price to show MAD currency
+            function formatPrice(price) {
+                return Math.round(price).toLocaleString() + ' MAD';
+            }
+        });
+    </script>
+</body>
+</html>

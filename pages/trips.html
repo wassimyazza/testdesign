@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - Stay & Travel Morocco</title>
+    <meta name="description" content="Find and book unique accommodations across Morocco - from traditional riads to modern apartments and coastal villas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .page-container {
+            background-color: #f9f7f5;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Tab Styles */
+        .tab-button {
+            position: relative;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .tab-button:hover {
+            color: #d62828;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            color: #d62828;
+        }
+        
+        .tab-button.active::after {
+            background-color: #d62828;
+        }
+        
+        /* Trip Card Styles */
+        .trip-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .trip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+        }
+        
+        .trip-image {
+            position: relative;
+        }
+        
+        .trip-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 200px;
+        }
+        
+        .trip-image-placeholder {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e5e7eb;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-confirmed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-completed {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .trip-info {
+            padding: 1.5rem;
+        }
+        
+        .trip-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .trip-location {
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .trip-location i {
+            color: #d62828;
+            margin-right: 0.5rem;
+        }
+        
+        .trip-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .trip-detail-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .trip-detail-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .btn-primary:hover {
+            background-color: #bfdbfe;
+        }
+        
+        .btn-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #fecaca;
+        }
+        
+        .btn-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .btn-success:hover {
+            background-color: #a7f3d0;
+        }
+        
+        .btn-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .btn-warning:hover {
+            background-color: #fde68a;
+        }
+        
+        .price-value {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #d62828;
+        }
+        
+        .empty-trips {
+            background-color: white;
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .empty-trips-icon {
+            font-size: 4rem;
+            color: #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-trips-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-trips-text {
+            color: #6b7280;
+            max-width: 20rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .btn-browse {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #d62828;
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-browse:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .footer-link {
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: #d62828;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .social-icon:hover {
+            background-color: #d62828;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link active">My Trips</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">John Doe</span>
+                                <img src="https://ui-avatars.com/api/?name=John+Doe&color=7F9CF5&background=EBF4FF" alt="John Doe" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <form method="POST" action="#">
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Trips</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <form method="POST" action="#" class="block">
+                        <button type="submit" class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="flex-grow">
+        <div class="page-container py-10">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Sidebar -->
+                    <div class="w-full md:w-1/4 mb-8 md:mb-0 md:pr-6">
+                        <div class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                            <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                                <h2 class="text-lg font-serif font-bold relative z-10">
+                                    Traveler Dashboard
+                                </h2>
+                                <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                    <div class="pattern-dots-md text-white">
+                                        <!-- Pattern background -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="py-2">
+                                <!-- Traveler Sidebar -->
+                                <a href="#" class="sidebar-link active">
+                                    <i class="fas fa-suitcase"></i> My Trips
+                                </a>
+                                <a href="#" class="sidebar-link">
+                                    <i class="fas fa-user"></i> Profile
+                                </a>
+                                <a href="#" class="sidebar-link">
+                                    <i class="fas fa-envelope"></i> Messages
+                                </a>
+                                <a href="#" class="sidebar-link">
+                                    <i class="fas fa-receipt"></i> Transactions
+                                </a>
+                                <form method="POST" action="#" class="sidebar-link-container">
+                                    <button type="submit" class="sidebar-link-button">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Content -->
+                    <div class="w-full md:w-3/4">
+                        <h1 class="text-2xl font-bold text-gray-900 mb-6 font-serif">My Trips</h1>
+                        
+                        <!-- Filter Tabs -->
+                        <div class="flex border-b border-gray-200 mb-6">
+                            <button id="all-tab" class="tab-button active">All</button>
+                            <button id="upcoming-tab" class="tab-button">Upcoming</button>
+                            <button id="past-tab" class="tab-button">Past</button>
+                            <button id="cancelled-tab" class="tab-button">Cancelled</button>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Trip Card 1 -->
+                            <div class="reservation-item trip-card" 
+                                data-status="confirmed" 
+                                data-date="2025-06-15">
+                                <div class="md:flex">
+                                    <div class="md:w-1/3 trip-image" style="height: 250px;">
+                                        <img src="https://images.unsplash.com/photo-1514222134-b57cbb8ce073?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Luxury Riad in the Medina">
+                                        
+                                        <span class="status-badge status-confirmed">
+                                            <i class="fas fa-check-circle mr-1"></i> Confirmed
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="md:w-2/3 trip-info">
+                                        <h3 class="trip-title">Luxury Riad in the Medina</h3>
+                                        <p class="trip-location">
+                                            <i class="fas fa-map-marker-alt"></i> Marrakech
+                                        </p>
+                                        
+                                        <div class="trip-detail-grid mb-6">
+                                            <div>
+                                                <p class="trip-detail-label">Check-in</p>
+                                                <p class="trip-detail-value">Jun 10, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Check-out</p>
+                                                <p class="trip-detail-value">Jun 15, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Guests</p>
+                                                <p class="trip-detail-value">2</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Total</p>
+                                                <p class="price-value">6,300 MAD</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap gap-3">
+                                            <a href="#" class="btn-action btn-primary">
+                                                <i class="fas fa-info-circle mr-2"></i> View Details
+                                            </a>
+                                            <a href="#" class="btn-action btn-warning">
+                                                <i class="fas fa-comment-alt mr-2"></i> Contact Host
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Trip Card 2 -->
+                            <div class="reservation-item trip-card" 
+                                data-status="completed" 
+                                data-date="2025-03-20">
+                                <div class="md:flex">
+                                    <div class="md:w-1/3 trip-image" style="height: 250px;">
+                                        <img src="https://images.unsplash.com/photo-1600716051809-e997e11a5d52?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Chefchaouen Blue Haven">
+                                        
+                                        <span class="status-badge status-completed">
+                                            <i class="fas fa-check-double mr-1"></i> Completed
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="md:w-2/3 trip-info">
+                                        <h3 class="trip-title">Chefchaouen Blue Haven</h3>
+                                        <p class="trip-location">
+                                            <i class="fas fa-map-marker-alt"></i> Chefchaouen
+                                        </p>
+                                        
+                                        <div class="trip-detail-grid mb-6">
+                                            <div>
+                                                <p class="trip-detail-label">Check-in</p>
+                                                <p class="trip-detail-value">Mar 15, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Check-out</p>
+                                                <p class="trip-detail-value">Mar 20, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Guests</p>
+                                                <p class="trip-detail-value">3</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Total</p>
+                                                <p class="price-value">2,115 MAD</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap gap-3">
+                                            <a href="#" class="btn-action btn-primary">
+                                                <i class="fas fa-info-circle mr-2"></i> View Details
+                                            </a>
+                                            <a href="#" class="btn-action btn-success">
+                                                <i class="fas fa-star mr-2"></i> Leave Review
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Trip Card 3 -->
+                            <div class="reservation-item trip-card" 
+                                data-status="pending" 
+                                data-date="2025-05-30">
+                                <div class="md:flex">
+                                    <div class="md:w-1/3 trip-image" style="height: 250px;">
+                                        <img src="https://images.unsplash.com/photo-1494145904049-0dca59b4bbad?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Fes Medina Retreat">
+                                        
+                                        <span class="status-badge status-pending">
+                                            <i class="fas fa-clock mr-1"></i> Pending
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="md:w-2/3 trip-info">
+                                        <h3 class="trip-title">Fes Medina Retreat</h3>
+                                        <p class="trip-location">
+                                            <i class="fas fa-map-marker-alt"></i> Fes
+                                        </p>
+                                        
+                                        <div class="trip-detail-grid mb-6">
+                                            <div>
+                                                <p class="trip-detail-label">Check-in</p>
+                                                <p class="trip-detail-value">May 25, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Check-out</p>
+                                                <p class="trip-detail-value">May 30, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Guests</p>
+                                                <p class="trip-detail-value">4</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Total</p>
+                                                <p class="price-value">5,000 MAD</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap gap-3">
+                                            <a href="#" class="btn-action btn-primary">
+                                                <i class="fas fa-info-circle mr-2"></i> View Details
+                                            </a>
+                                            <form method="POST" action="#" style="display: inline;" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                                <button type="submit" class="btn-action btn-danger">
+                                                    <i class="fas fa-times mr-2"></i> Cancel
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Trip Card 4 -->
+                            <div class="reservation-item trip-card" 
+                                data-status="cancelled" 
+                                data-date="2025-07-10">
+                                <div class="md:flex">
+                                    <div class="md:w-1/3 trip-image" style="height: 250px;">
+                                        <img src="https://images.unsplash.com/photo-1509909756405-be0199881695?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Casablanca Ocean View">
+                                        
+                                        <span class="status-badge status-cancelled">
+                                            <i class="fas fa-times-circle mr-1"></i> Cancelled
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="md:w-2/3 trip-info">
+                                        <h3 class="trip-title">Casablanca Ocean View</h3>
+                                        <p class="trip-location">
+                                            <i class="fas fa-map-marker-alt"></i> Casablanca
+                                        </p>
+                                        
+                                        <div class="trip-detail-grid mb-6">
+                                            <div>
+                                                <p class="trip-detail-label">Check-in</p>
+                                                <p class="trip-detail-value">Jul 5, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Check-out</p>
+                                                <p class="trip-detail-value">Jul 10, 2025</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Guests</p>
+                                                <p class="trip-detail-value">5</p>
+                                            </div>
+                                            <div>
+                                                <p class="trip-detail-label">Total</p>
+                                                <p class="price-value">8,400 MAD</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap gap-3">
+                                            <a href="#" class="btn-action btn-primary">
+                                                <i class="fas fa-info-circle mr-2"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Stay & Travel Morocco</h3>
+                    <p class="text-gray-600 mb-4">Discover authentic Moroccan hospitality and find your perfect stay across the kingdom.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">All Properties</a></li>
+                        <li><a href="#" class="footer-link">Marrakech</a></li>
+                        <li><a href="#" class="footer-link">Casablanca</a></li>
+                        <li><a href="#" class="footer-link">Fes</a></li>
+                        <li><a href="#" class="footer-link">Chefchaouen</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Host</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Become a Host</a></li>
+                        <li><a href="#" class="footer-link">Responsible Hosting</a></li>
+                        <li><a href="#" class="footer-link">Host Resources</a></li>
+                        <li><a href="#" class="footer-link">Community Forum</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Safety Information</a></li>
+                        <li><a href="#" class="footer-link">Cancellation Options</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">&copy; 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Tab functionality
+        const allTab = document.getElementById('all-tab');
+        const upcomingTab = document.getElementById('upcoming-tab');
+        const pastTab = document.getElementById('past-tab');
+        const cancelledTab = document.getElementById('cancelled-tab');
+        const reservationItems = document.querySelectorAll('.reservation-item');
+        
+        // Set active tab style
+        function setActiveTab(activeTab) {
+            [allTab, upcomingTab, pastTab, cancelledTab].forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            activeTab.classList.add('active');
+        }
+        
+        // Filter reservations
+        function filterReservations(filter) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            reservationItems.forEach(item => {
+                const status = item.dataset.status;
+                const checkoutDate = item.dataset.date;
+                
+                if (filter === 'all') {
+                    item.style.display = 'block';
+                } else if (filter === 'upcoming' && (status === 'pending' || status === 'confirmed') && checkoutDate >= today) {
+                    item.style.display = 'block';
+                } else if (filter === 'past' && (status === 'completed' || (status === 'confirmed' && checkoutDate < today))) {
+                    item.style.display = 'block';
+                } else if (filter === 'cancelled' && status === 'cancelled') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Event listeners
+        allTab.addEventListener('click', function() {
+            setActiveTab(allTab);
+            filterReservations('all');
+        });
+        
+        upcomingTab.addEventListener('click', function() {
+            setActiveTab(upcomingTab);
+            filterReservations('upcoming');
+        });
+        
+        pastTab.addEventListener('click', function() {
+            setActiveTab(pastTab);
+            filterReservations('past');
+        });
+        
+        cancelledTab.addEventListener('click', function() {
+            setActiveTab(cancelledTab);
+            filterReservations('cancelled');
+        });
+        
+        // Initial setup
+        filterReservations('all');
+    </script>
+</body>
+</html>

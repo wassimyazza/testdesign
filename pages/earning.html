@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings & Withdrawals - Stay & Travel Morocco</title>
+    <meta name="description" content="Find and book unique accommodations across Morocco - from traditional riads to modern apartments and coastal villas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f9fafb;
+            color: #d62828;
+        }
+        
+        .sidebar-link.active {
+            background-color: #fef2f2;
+            color: #d62828;
+            border-left-color: #d62828;
+        }
+        
+        .sidebar-link i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-link-container {
+            padding: 0 1rem;
+        }
+        
+        .sidebar-link-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .sidebar-link-button:hover {
+            color: #d62828;
+        }
+        
+        .sidebar-link-button i {
+            width: 1.5rem;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .pattern-dots-md {
+            background-image: radial-gradient(currentColor 1px, transparent 1px);
+            background-size: 5px 5px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .footer-link {
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: #d62828;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .social-icon:hover {
+            background-color: #d62828;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link">My Properties</a>
+                        <a href="#" class="navbar-link active">Earnings</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">Host User</span>
+                                <img src="https://ui-avatars.com/api/?name=Host+User&color=7F9CF5&background=EBF4FF" alt="Host User" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <form method="POST" action="#">
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Earnings</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <form method="POST" action="#" class="block">
+                        <button type="submit" class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="flex-grow">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row">
+                <!-- Sidebar -->
+                <div class="w-full md:w-1/4 mb-8 md:mb-0 md:pr-6">
+                    <div class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-moroccan-blue to-moroccan-teal text-white relative">
+                            <h2 class="text-lg font-serif font-bold relative z-10">
+                                Host Earnings
+                            </h2>
+                            <div class="absolute top-0 right-0 left-0 bottom-0 opacity-10">
+                                <div class="pattern-dots-md text-white">
+                                    <!-- Pattern background -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="py-2">
+                            <!-- Host Sidebar -->
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-home"></i> My Properties
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-plus-circle"></i> Add Property
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-calendar-check"></i> Reservations
+                            </a>
+                            <a href="#" class="sidebar-link active">
+                                <i class="fas fa-wallet"></i> Earnings
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-envelope"></i> Messages
+                            </a>
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-receipt"></i> Transactions
+                            </a>
+                            <form method="POST" action="#" class="sidebar-link-container">
+                                <button type="submit" class="sidebar-link-button">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="w-full md:w-3/4">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-6">My Earnings</h1>
+                    
+                    <!-- Balance Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                        <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-lg font-semibold">Available Balance</h2>
+                                    <p class="text-sm text-blue-100">Available for withdrawal</p>
+                                </div>
+                                <div class="text-3xl font-bold">2,500.00 MAD</div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <a href="#" 
+                                    class="inline-flex items-center px-4 py-2 bg-white text-blue-700 rounded-md hover:bg-blue-50 transition">
+                                    <i class="fas fa-money-bill-wave mr-2"></i> Request Withdrawal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Withdrawals History -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="px-6 py-4 bg-blue-50 border-b border-blue-100">
+                            <h2 class="font-semibold text-blue-800">Withdrawal History</h2>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Bank Info
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Apr 15, 2025</div>
+                                            <div class="text-xs text-gray-500">02:30 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">3,500.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">BMCE Bank - Account ending **5678</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Approved
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Mar 22, 2025</div>
+                                            <div class="text-xs text-gray-500">10:15 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">2,100.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">Attijariwafa Bank - Account ending **9012</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Pending
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">Feb 28, 2025</div>
+                                            <div class="text-xs text-gray-500">04:45 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">1,800.00 MAD</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm text-gray-900 max-w-xs truncate">CIH Bank - Account ending **3456</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Approved
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Stay & Travel Morocco</h3>
+                    <p class="text-gray-600 mb-4">Discover authentic Moroccan hospitality and find your perfect stay across the kingdom.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">All Properties</a></li>
+                        <li><a href="#" class="footer-link">Marrakech</a></li>
+                        <li><a href="#" class="footer-link">Casablanca</a></li>
+                        <li><a href="#" class="footer-link">Fes</a></li>
+                        <li><a href="#" class="footer-link">Chefchaouen</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Host</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Become a Host</a></li>
+                        <li><a href="#" class="footer-link">Responsible Hosting</a></li>
+                        <li><a href="#" class="footer-link">Host Resources</a></li>
+                        <li><a href="#" class="footer-link">Community Forum</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Safety Information</a></li>
+                        <li><a href="#" class="footer-link">Cancellation Options</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">&copy; 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-600 hover:text-moroccan-red">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

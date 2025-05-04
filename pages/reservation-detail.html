@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Details - Stay & Travel Morocco</title>
+    <meta name="description" content="Find and book unique accommodations across Morocco - from traditional riads to modern apartments and coastal villas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'moroccan-blue': '#146eb4',
+                        'moroccan-teal': '#1b9aaa',
+                        'moroccan-red': '#d62828',
+                        'moroccan-orange': '#f77f00',
+                        'moroccan-yellow': '#fcbf49',
+                        'moroccan-sand': '#eae2b7',
+                        'moroccan-terracotta': '#cb997e'
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .page-container {
+            background-color: #f9f7f5;
+        }
+        
+        .reservation-card {
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .status-header {
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .status-header.pending {
+            background-color: #fffbeb;
+        }
+        
+        .status-header.confirmed {
+            background-color: #ecfdf5;
+        }
+        
+        .status-header.completed {
+            background-color: #eff6ff;
+        }
+        
+        .status-header.cancelled {
+            background-color: #fef2f2;
+        }
+        
+        .status-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='6' viewBox='0 0 100 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6 L10 0 L20 6 L30 0 L40 6 L50 0 L60 6 L70 0 L80 6 L90 0 L100 6 L100 6 L0 6' fill='white'/%3E%3C/svg%3E");
+            background-size: 100px 6px;
+            background-repeat: repeat-x;
+        }
+        
+        .status-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        .status-title.pending {
+            color: #92400e;
+        }
+        
+        .status-title.confirmed {
+            color: #065f46;
+        }
+        
+        .status-title.completed {
+            color: #1e40af;
+        }
+        
+        .status-title.cancelled {
+            color: #b91c1c;
+        }
+        
+        .status-description {
+            margin-top: 0.5rem;
+        }
+        
+        .status-description.pending {
+            color: #92400e;
+        }
+        
+        .status-description.confirmed {
+            color: #065f46;
+        }
+        
+        .status-description.completed {
+            color: #1e40af;
+        }
+        
+        .status-description.cancelled {
+            color: #b91c1c;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-badge.confirmed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-badge.completed {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-badge.cancelled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .property-image {
+            height: 12rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .property-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e5e7eb;
+        }
+        
+        .property-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1f2937;
+        }
+        
+        .property-address {
+            color: #6b7280;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .info-subtext {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .payment-details {
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+        
+        .payment-label {
+            color: #6b7280;
+        }
+        
+        .payment-value {
+            color: #1f2937;
+        }
+        
+        .payment-total {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 700;
+        }
+        
+        .payment-status {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .payment-status.completed i {
+            color: #059669;
+        }
+        
+        .payment-status.refunded i {
+            color: #d97706;
+        }
+        
+        .payment-status.pending i {
+            color: #4b5563;
+        }
+        
+        .contact-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .contact-placeholder {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .contact-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .contact-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-message {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .btn-message:hover {
+            background-color: #bfdbfe;
+        }
+        
+        .btn-cancel {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #fecaca;
+        }
+        
+        .btn-confirm {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .btn-confirm:hover {
+            background-color: #a7f3d0;
+        }
+        
+        .btn-review {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .btn-review:hover {
+            background-color: #fde68a;
+        }
+        
+        .btn-view {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .btn-view:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-back {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .btn-back:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .breadcrumb-link {
+            color: #146eb4;
+            transition: color 0.2s;
+        }
+        
+        .breadcrumb-link:hover {
+            color: #0f4f82;
+        }
+        
+        .breadcrumb-separator {
+            color: #9ca3af;
+            margin: 0 0.5rem;
+        }
+        
+        .breadcrumb-current {
+            color: #6b7280;
+        }
+        
+        .btn-payment {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #d62828;
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+        
+        .btn-payment:hover {
+            background-color: #b82020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+        }
+        
+        .btn-payment:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .price-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .price-total {
+            font-weight: 700;
+            color: #d62828;
+        }
+        
+        /* Payment Form Styles */
+        .payment-form {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .payment-form-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .payment-card-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .payment-card-row .form-group {
+            flex: 1;
+        }
+        
+        #card-errors {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #d62828;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .navbar-link {
+            position: relative;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            color: #4b5563;
+            transition: color 0.2s;
+        }
+        
+        .navbar-link:hover {
+            color: #d62828;
+        }
+        
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 1rem;
+            background-color: #d62828;
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-link:hover::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .navbar-link.active {
+            color: #d62828;
+        }
+        
+        .navbar-link.active::after {
+            width: calc(100% - 2rem);
+        }
+        
+        .footer-link {
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: #d62828;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .social-icon:hover {
+            background-color: #d62828;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .navbar-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between py-4">
+                    <div class="flex items-center">
+                        <a href="#" class="flex items-center">
+                            <i class="fas fa-kaaba text-2xl text-moroccan-red mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800">Stay<span class="text-moroccan-red">&</span>Travel</span>
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-2 items-center">
+                        <a href="#" class="navbar-link">Home</a>
+                        <a href="#" class="navbar-link">Properties</a>
+                        <a href="#" class="navbar-link active">My Trips</a>
+                        
+                        <div class="relative ml-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <span class="mr-2">John Doe</span>
+                                <img src="https://ui-avatars.com/api/?name=John+Doe&color=7F9CF5&background=EBF4FF" alt="John Doe" class="h-8 w-8 rounded-full object-cover">
+                            </button>
+                            
+                            <div x-show="open" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Messages
+                                </a>
+                                <form method="POST" action="#">
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none" onclick="toggleMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </nav>
+                
+                <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-200 space-y-3">
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Properties</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">My Trips</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Messages</a>
+                    <form method="POST" action="#" class="block">
+                        <button type="submit" class="w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="flex-grow">
+        <div class="page-container py-10">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <!-- Breadcrumbs -->
+                    <div class="breadcrumbs">
+                        <a href="#" class="breadcrumb-link">My Trips</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Reservation #1234</span>
+                    </div>
+                    
+                    <div class="reservation-card">
+                        <!-- Status Header -->
+                        <div class="status-header confirmed">
+                            <div class="flex justify-between items-center">
+                                <h1 class="status-title confirmed text-2xl">
+                                    Reservation #1234
+                                </h1>
+                                
+                                <div>
+                                    <span class="status-badge confirmed">
+                                        <i class="fas fa-check-circle mr-2"></i> Confirmed
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <p class="status-description confirmed">
+                                Your reservation is confirmed. You're all set for your trip!
+                            </p>
+                        </div>
+                        
+                        <!-- Property & Date Info -->
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="md:flex">
+                                <div class="md:w-1/3 mb-4 md:mb-0 md:pr-6">
+                                    <div class="property-image">
+                                        <img src="https://images.unsplash.com/photo-1514222134-b57cbb8ce073?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Luxury Riad in the Medina">
+                                    </div>
+                                </div>
+                                
+                                <div class="md:w-2/3">
+                                    <h2 class="property-title">Luxury Riad in the Medina</h2>
+                                    <p class="property-address">Medina, Marrakech</p>
+                                    
+                                    <div class="info-grid">
+                                        <div>
+                                            <h3 class="info-label">Check-in</h3>
+                                            <p class="info-value">June 10, 2025</p>
+                                            <p class="info-subtext">After 3:00 PM</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 class="info-label">Check-out</h3>
+                                            <p class="info-value">June 15, 2025</p>
+                                            <p class="info-subtext">Before 11:00 AM</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 class="info-label">Guests</h3>
+                                            <p class="info-value">2 guests</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 class="info-label">Duration</h3>
+                                            <p class="info-value">5 nights</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Information -->
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 font-serif">Payment Information</h2>
+                            
+                            <div class="payment-details">
+                                <div class="mb-4">
+                                    <div class="payment-row">
+                                        <span class="payment-label">1,200 MAD x 5 nights</span>
+                                        <span class="payment-value">6,000 MAD</span>
+                                    </div>
+                                    <div class="payment-row">
+                                        <span class="payment-label">Cleaning fee</span>
+                                        <span class="payment-value">120 MAD</span>
+                                    </div>
+                                    <div class="payment-row">
+                                        <span class="payment-label">Service fee</span>
+                                        <span class="payment-value">180 MAD</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-row payment-total">
+                                    <span>Total</span>
+                                    <span class="price-total">6,300 MAD</span>
+                                </div>
+                                
+                                <div class="payment-status completed">
+                                    <i class="fas fa-credit-card mr-2"></i>
+                                    <span>Paid on May 15, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Host Section -->
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 font-serif">Contact Host</h2>
+                            
+                            <div class="contact-section">
+                                <img src="https://ui-avatars.com/api/?name=Hassan+Alaoui&color=7F9CF5&background=EBF4FF" alt="Hassan Alaoui" class="contact-avatar">
+                                <div>
+                                    <h3 class="contact-name">Hassan Alaoui</h3>
+                                    <p class="contact-role">Host</p>
+                                </div>
+                                
+                                <div class="ml-auto">
+                                    <a href="#" class="btn-action btn-message">
+                                        <i class="fas fa-comment-alt mr-2"></i> Message Host
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="p-6 flex flex-wrap gap-3">
+                            <a href="#" class="btn-action btn-review">
+                                <i class="fas fa-star mr-2"></i> Leave a Review
+                            </a>
+                            
+                            <a href="#" class="btn-action btn-view">
+                                <i class="fas fa-eye mr-2"></i> View Property
+                            </a>
+                            
+                            <a href="#" class="btn-action btn-back">
+                                <i class="fas fa-arrow-left mr-2"></i> Back to My Trips
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Stay & Travel Morocco</h3>
+                    <p class="text-gray-600 mb-4">Discover authentic Moroccan hospitality and find your perfect stay across the kingdom.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">All Properties</a></li>
+                        <li><a href="#" class="footer-link">Marrakech</a></li>
+                        <li><a href="#" class="footer-link">Casablanca</a></li>
+                        <li><a href="#" class="footer-link">Fes</a></li>
+                        <li><a href="#" class="footer-link">Chefchaouen</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Host</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Become a Host</a></li>
+                        <li><a href="#" class="footer-link">Responsible Hosting</a></li>
+                        <li><a href="#" class="footer-link">Host Resources</a></li>
+                        <li><a href="#" class="footer-link">Community Forum</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Safety Information</a></li>
+                        <li><a href="#" class="footer-link">Cancellation Options</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-sm">&copy; 2025 Stay & Travel Morocco. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-sm text-gray-600 hover:
